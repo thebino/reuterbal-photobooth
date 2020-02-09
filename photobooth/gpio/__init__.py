@@ -18,6 +18,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+import subprocess
 from colorsys import hsv_to_rgb
 from time import sleep
 
@@ -33,6 +34,9 @@ class Gpio:
 
         self._comm = comm
         self._gpio = None
+
+        neo_init_process = subprocess.check_output(["sudo", "python3", "neo_init.py"])
+        logging.info("neo init: %s", neo_init_process)
 
         self._is_trigger = False
         self._is_enabled = config.getBool('Gpio', 'enable')
@@ -91,6 +95,8 @@ class Gpio:
             self.teardown(state)
 
     def teardown(self, state):
+        neo_teardown_process = subprocess.check_output(["sudo", "python3", "neo_teardown.py"])
+        logging.info("neo teardown: %s", neo_teardown_process)
 
         if self._is_enabled:
             self._gpio.teardown()
@@ -160,6 +166,8 @@ class Gpio:
         self.rgbOff()
 
     def showCountdown(self):
+        neo_flash_process = subprocess.check_output(["sudo", "python3", "neo_flash.py"])
+        logging.info("neo_flash: %s", neo_flash_process)
 
         sleep(0.2)
         self.rgbBlink()
@@ -170,6 +178,10 @@ class Gpio:
         self.setRgbColor(1, 1, .9)
 
     def showAssemble(self):
+        neo_assemble_process = subprocess.check_output(["sudo", "python3", "neo_assemble.py"])
+        logging.info("neo_assemble: %s", neo_assemble_process)
+
+        sleep(0.2)
 
         self.rgbOff()
 
